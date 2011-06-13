@@ -120,4 +120,6 @@ class ActiveSupport::TestCase
 
   VALID_RECURRING_STATUS_REQUEST_PARAMS = {:action => "recurring_status", :recurring_id => 1234}
 
+  VALID_PREAUTH_REQUEST_PARAMS = VALID_SALE_REQUEST_PARAMS.merge(:action => "preauth")
+
 end
