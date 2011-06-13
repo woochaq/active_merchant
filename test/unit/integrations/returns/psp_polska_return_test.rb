@@ -18,6 +18,8 @@ class PspPolskaReturnTest < ActiveSupport::TestCase
     assert recurring_start.valid?
     recurring_status = Return.new(VALID_RECURRING_STATUS_RESPONSE, :ip => PspPolskaConfig["ip"])
     assert recurring_status.valid?
+    preauth = Return.new(VALID_PREAUTH_RESPONSE, :ip => PspPolskaConfig["ip"])
+    assert preauth.valid?
   end
 
   def test_valid_response_should_create_invalid_return_without_ip
@@ -29,6 +31,8 @@ class PspPolskaReturnTest < ActiveSupport::TestCase
     assert !recurring_start.valid?
     recurring_status = Return.new(VALID_RECURRING_STATUS_RESPONSE)
     assert !recurring_status.valid?
+    preauth = Return.new(VALID_PREAUTH_RESPONSE)
+    assert !preauth.valid?
   end
   
   def test_valid_response_should_create_invalid_return_with_incorrect_ip
@@ -40,6 +44,8 @@ class PspPolskaReturnTest < ActiveSupport::TestCase
     assert !recurring_start.valid?
     recurring_status = Return.new(VALID_RECURRING_STATUS_RESPONSE, :ip => "127.0.0.1")
     assert !recurring_status.valid?
+    preauth = Return.new(VALID_PREAUTH_RESPONSE, :ip => "127.0.0.1")
+    assert !preauth.valid?
   end
 
   def test_calculate_checksum
@@ -51,6 +57,8 @@ class PspPolskaReturnTest < ActiveSupport::TestCase
     assert_equal recurring_start.calculate_checksum, Digest::MD5.hexdigest("999999991some_session_idaccepted1305781394TestResponse1")
     recurring_status = Return.new(VALID_RECURRING_STATUS_RESPONSE)
     assert_equal recurring_status.calculate_checksum, Digest::MD5.hexdigest("9999999911234active5678TestResponse1")
+    preauth = Return.new(VALID_PREAUTH_RESPONSE)
+    assert_equal preauth.calculate_checksum, Digest::MD5.hexdigest("999999991some_session_idaccepted1307964315TestResponse1")
   end
 
   def test_success?
@@ -81,6 +89,14 @@ class PspPolskaReturnTest < ActiveSupport::TestCase
     assert !recurring_start.success?
     recurring_status = Return.new(VALID_RECURRING_STATUS_RESPONSE, :ip => PspPolskaConfig["ip"])
     assert_raise(StandardError) { recurring_status.success? }
+    preauth = Return.new(VALID_PREAUTH_RESPONSE, :ip => PspPolskaConfig["ip"])
+    assert preauth.success?
+    preauth = Return.new(
+      VALID_PREAUTH_RESPONSE.gsub("<status>accepted</status>", "<status>declined</status>"),
+      :ip => PspPolskaConfig["ip"])
+    preauth.stubs(:valid?).returns(true)
+    assert preauth.valid?
+    assert !preauth.success?
   end
 
   def test_redirect_url
@@ -92,6 +108,8 @@ class PspPolskaReturnTest < ActiveSupport::TestCase
     assert_equal recurring_start.redirect_url, "https://sandbox.psp-polska.pl/transaction/credit_card/recurring/764714872"
     recurring_status = Return.new(VALID_RECURRING_STATUS_RESPONSE)
     assert_equal recurring_status.redirect_url, nil
+    preauth = Return.new(VALID_PREAUTH_RESPONSE)
+    assert_equal preauth.redirect_url, "https://sandbox.psp-polska.pl/transaction/credit_card/preauth/307663319"
   end
 
   def test_recurring_info

@@ -13,7 +13,7 @@ module ActiveMerchant
 
           def success?
             return false unless valid? 
-            if ["sale", "recurring_start"].include?(params["action"])
+            if ["sale", "preauth", "recurring_start"].include?(params["action"])
               return true if status == "accepted"
             elsif params["action"] == "get_status"
               return true if status == "approved"
@@ -54,7 +54,7 @@ module ActiveMerchant
           end
  
           def calculate_checksum
-            if ["sale", "recurring_start"].include?(params["action"])
+            if ["sale", "preauth", "recurring_start"].include?(params["action"])
               Digest::MD5::hexdigest(params["app_id"] + params["session_id"] + params["status"] + params["ts"] + PspPolskaConfig['key_response'])
             elsif params["action"] == "get_status"
               Digest::MD5::hexdigest(params["app_id"] + params["transaction_id"] + params["status"] + params["ts"] + PspPolskaConfig['key_response'])
