@@ -97,6 +97,20 @@ class ActiveSupport::TestCase
     <ts>1303297377</ts>
   </response>"
 
+  VALID_PREAUTH = "<?xml version='1.0' encoding='UTF-8'?>
+  <response>
+    <action>preauth</action>
+    <app-id>999999991</app-id>
+    <session-id>some_session_id</session-id>
+    <title>bzdet</title>
+    <amount>100</amount>
+    <currency>EUR</currency>
+    <transaction-id>639923858</transaction-id>
+    <status>approved</status>
+    <checksum>64a0ac4a8f9899c89e11657122b3c39e</checksum>
+    <ts>1303297377</ts>
+  </response>"
+
   VALID_RECURRING_START = "<?xml version='1.0' encoding='UTF-8'?>
   <response>
     <action>recurring_start</action>
