@@ -112,12 +112,12 @@ class ActiveSupport::TestCase
 
  VALID_SALE_REQUEST_PARAMS =  {:action => "sale", :amount => 100, :currency => "EUR", :title => "bzdet", :session_id => "some_session_id", :email => "email@example.com", :first_name => "John", :last_name => "Smith", :client_ip => "127.0.0.1"}
 
-  VALID_CONFIRMATION_REQUEST_PARAMS = {:action => "get_status", :transaction_id => "666"}
+  VALID_STATUS_REQUEST_PARAMS = {:action => "get_status", :transaction_id => "666"}
 
   VALID_RECURRING_START_REQUEST_PARAMS = VALID_SALE_REQUEST_PARAMS.merge(:action => "recurring_start", :cycle => "1m")
 
   VALID_RECURRING_STOP_REQUEST_PARAMS = {:action => "recurring_stop", :recurring_id => 777}
 
-  VALID_RECURRING_CONFIRMATION_REQUEST_PARAMS = {:action => "recurring_status", :recurring_id => 1234}
+  VALID_RECURRING_STATUS_REQUEST_PARAMS = {:action => "recurring_status", :recurring_id => 1234}
 
 end

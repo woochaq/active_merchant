@@ -14,7 +14,7 @@ class RemotePspPolskaIntegrationTest < ActiveSupport::TestCase
 
   def test_get_status
     sale_setup
-    @request = PspPolskaRequest.new(VALID_CONFIRMATION_REQUEST_PARAMS.merge(:transaction_id => @return.transaction_id))
+    @request = PspPolskaRequest.new(VALID_STATUS_REQUEST_PARAMS.merge(:transaction_id => @return.transaction_id))
     basic_setup
     assert @return.valid?
     assert_equal @return.action, "get_status"
@@ -31,7 +31,7 @@ class RemotePspPolskaIntegrationTest < ActiveSupport::TestCase
 
   def test_recurring_status
     recurring_setup
-    @request = PspPolskaRequest.new(VALID_RECURRING_CONFIRMATION_REQUEST_PARAMS.merge(:recurring_id => @return.recurring_id))
+    @request = PspPolskaRequest.new(VALID_RECURRING_STATUS_REQUEST_PARAMS.merge(:recurring_id => @return.recurring_id))
     basic_setup
     assert @return.valid?
     assert_equal @return.action, "recurring_status"

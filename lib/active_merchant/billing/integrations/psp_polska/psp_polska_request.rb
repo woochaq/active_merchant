@@ -2,11 +2,11 @@ require "digest/md5"
 require "net/http"
 require "net/https"
           
-PSP_POLSKA_REQUEST_CHECKSUM_FIELDS = [:app_id, :action, :session_id, :amount, :first_name, :last_name, :client_ip, :ts]
-PSP_POLSKA_CONFIRMATION_REQUEST_CHECKSUM_FIELDS = [:app_id, :action, :transaction_id, :ts]
-PSP_POLSKA_RECURRING_START_REQUEST_CHECKSUM_FIELDS = PSP_POLSKA_REQUEST_CHECKSUM_FIELDS
+PSP_POLSKA_SALE_REQUEST_CHECKSUM_FIELDS = [:app_id, :action, :session_id, :amount, :first_name, :last_name, :client_ip, :ts]
+PSP_POLSKA_STATUS_REQUEST_CHECKSUM_FIELDS = [:app_id, :action, :transaction_id, :ts]
+PSP_POLSKA_RECURRING_START_REQUEST_CHECKSUM_FIELDS = PSP_POLSKA_SALE_REQUEST_CHECKSUM_FIELDS
 PSP_POLSKA_RECURRING_STOP_REQUEST_CHECKSUM_FIELDS = [:app_id, :action, :recurring_id, :ts]
-PSP_POLSKA_RECURRING_CONFIRMATION_REQUEST_CHECKSUM_FIELDS = PSP_POLSKA_RECURRING_STOP_REQUEST_CHECKSUM_FIELDS
+PSP_POLSKA_RECURRING_STATUS_REQUEST_CHECKSUM_FIELDS = PSP_POLSKA_RECURRING_STOP_REQUEST_CHECKSUM_FIELDS
 
 module ActiveMerchant
   module Billing
@@ -62,15 +62,15 @@ module ActiveMerchant
           def set_type(action)
             @type = case action
             when "sale"
-              :request
+              :sale_request
             when "get_status"
-              :confirmation_request
+              :status_request
             when "recurring_start"
               :recurring_start_request
             when "recurring_stop"
               :recurring_stop_request
             when "recurring_status"
-              :recurring_confirmation_request
+              :recurring_status_request
             else
               raise ArgumentError, "Unknown action #{action}"
             end
