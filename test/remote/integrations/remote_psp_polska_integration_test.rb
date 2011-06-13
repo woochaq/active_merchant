@@ -38,10 +38,23 @@ class RemotePspPolskaIntegrationTest < ActiveSupport::TestCase
     assert_equal @return.status, "new"
   end
 
+  def test_preauth
+    preauth_setup
+    assert @return.valid?
+    assert_equal @return.action, "preauth"
+    assert_equal @return.status, "accepted"
+    assert_equal @return.redirect_url, "https://sandbox.psp-polska.pl/transaction/credit_card/preauth/#{@return.transaction_id}"
+  end
+
   private
  
   def sale_setup
     @request = PspPolskaRequest.new(VALID_SALE_REQUEST_PARAMS)
+    basic_setup
+  end
+
+  def preauth_setup
+    @request = PspPolskaRequest.new(VALID_PREAUTH_REQUEST_PARAMS)
     basic_setup
   end
 
