@@ -151,4 +151,6 @@ class ActiveSupport::TestCase
 
   VALID_PREAUTH_REQUEST_PARAMS = VALID_SALE_REQUEST_PARAMS.merge(:action => "preauth")
 
+  VALID_CAPTURE_REQUEST_PARAMS = {:action => "capture", :transaction_id => "123456" }
+
 end

@@ -13,6 +13,7 @@ class PspPolskaRequestTest < ActiveSupport::TestCase
     @recurring_stop_request = PspPolskaRequest.new(VALID_RECURRING_STOP_REQUEST_PARAMS)
     @recurring_status_request = PspPolskaRequest.new(VALID_RECURRING_STATUS_REQUEST_PARAMS)
     @preauth_request = PspPolskaRequest.new(VALID_PREAUTH_REQUEST_PARAMS)
+    @capture_request = PspPolskaRequest.new(VALID_CAPTURE_REQUEST_PARAMS)
   end
 
   def test_params_after_initialize
@@ -46,6 +47,11 @@ class PspPolskaRequestTest < ActiveSupport::TestCase
       assert @preauth_request.params.has_key?(key)
     end
     assert !@preauth_request.params.has_key?(:fake)
+    assert @capture_request.params.has_key?(:version)
+    PSP_POLSKA_CAPTURE_REQUEST_CHECKSUM_FIELDS.each do |key|
+      assert @capture_request.params.has_key?(key)
+    end
+    assert !@capture_request.params.has_key?(:fake)
   end
 
   def test_calculate_checksum
@@ -61,6 +67,8 @@ class PspPolskaRequestTest < ActiveSupport::TestCase
     assert_equal @recurring_status_request.params[:checksum], Digest::MD5.hexdigest("999999991recurring_status1234555TestRequest1")
     @preauth_request.calculate_checksum
     assert_equal @preauth_request.params[:checksum], Digest::MD5.hexdigest("999999991preauthsome_session_id100JohnSmith127.0.0.1555TestRequest1")
+    @capture_request.calculate_checksum
+    assert_equal @capture_request.params[:checksum], Digest::MD5.hexdigest("999999991capture123456555TestRequest1")
   end
 
   def test_load_fields_info

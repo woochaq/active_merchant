@@ -8,6 +8,7 @@ PSP_POLSKA_RECURRING_START_REQUEST_CHECKSUM_FIELDS = PSP_POLSKA_SALE_REQUEST_CHE
 PSP_POLSKA_RECURRING_STOP_REQUEST_CHECKSUM_FIELDS = [:app_id, :action, :recurring_id, :ts]
 PSP_POLSKA_RECURRING_STATUS_REQUEST_CHECKSUM_FIELDS = PSP_POLSKA_RECURRING_STOP_REQUEST_CHECKSUM_FIELDS
 PSP_POLSKA_PREAUTH_REQUEST_CHECKSUM_FIELDS = PSP_POLSKA_SALE_REQUEST_CHECKSUM_FIELDS
+PSP_POLSKA_CAPTURE_REQUEST_CHECKSUM_FIELDS = [:app_id, :action, :transaction_id, :ts]
 
 module ActiveMerchant
   module Billing
@@ -74,6 +75,8 @@ module ActiveMerchant
               :recurring_status_request
             when "preauth"
               :preauth_request
+            when "capture"
+              :capture_request
             else
               raise ArgumentError, "Unknown action #{action}"
             end
