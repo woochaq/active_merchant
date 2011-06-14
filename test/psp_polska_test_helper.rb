@@ -83,6 +83,17 @@ class ActiveSupport::TestCase
     </last-successful-transaction>
   </response>"
 
+  VALID_CAPTURE_RESPONSE = "<?xml version='1.0' encoding='UTF-8'?>
+  <response>
+    <action>capture</action>
+    <app-id>999999991</app-id>
+    <transaction-id>286708751</transaction-id>
+    <ts>1308045951</ts>
+    <checksum>8ed193ba33b64676d2a663fd7e7beefc</checksum>
+    <status>approved</status>
+  </response>"
+
+
   VALID_SALE = "<?xml version='1.0' encoding='UTF-8'?>
   <response>
     <action>sale</action>

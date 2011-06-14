@@ -13,14 +13,14 @@ module ActiveMerchant
 
           def success?
             return false unless valid? 
-            if ["sale", "preauth", "recurring_start"].include?(params["action"])
+            if ["sale", "preauth", "recurring_start"].include?(action)
               return true if status == "accepted"
-            elsif params["action"] == "get_status"
+            elsif ["get_status", "capture"].include?(action)
               return true if status == "approved"
-            elsif params["action"] == "recurring_status"
+            elsif action == "recurring_status"
               raise StandardError, "success? method is not available for recurring_status. Pleasy use status method"
             else
-              action_not_implemeted_error
+              action_not_implemented_error
             end
             false
           end
@@ -54,11 +54,11 @@ module ActiveMerchant
           end
  
           def calculate_checksum
-            if ["sale", "preauth", "recurring_start"].include?(params["action"])
+            if ["sale", "preauth", "recurring_start"].include?(action)
               Digest::MD5::hexdigest(params["app_id"] + params["session_id"] + params["status"] + params["ts"] + PspPolskaConfig['key_response'])
-            elsif params["action"] == "get_status"
+            elsif ["get_status", "capture"].include?(action)
               Digest::MD5::hexdigest(params["app_id"] + params["transaction_id"] + params["status"] + params["ts"] + PspPolskaConfig['key_response'])
-            elsif params["action"] == "recurring_status"
+            elsif action == "recurring_status"
               Digest::MD5::hexdigest(params["app_id"] + params["recurring_id"] + params["status"] + params["ts"] + PspPolskaConfig['key_response'])
             else
               action_not_implemented_error
@@ -84,7 +84,7 @@ module ActiveMerchant
           end
 
           def action_not_implemented_error
-            raise StandardError, "Action not implemnted yet: #{params["action"]}"
+            raise StandardError, "Action not implemnted yet: #{action}"
           end
         end
       end

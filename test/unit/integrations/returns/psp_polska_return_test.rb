@@ -20,6 +20,8 @@ class PspPolskaReturnTest < ActiveSupport::TestCase
     assert recurring_status.valid?
     preauth = Return.new(VALID_PREAUTH_RESPONSE, :ip => PspPolskaConfig["ip"])
     assert preauth.valid?
+    capture = Return.new(VALID_CAPTURE_RESPONSE, :ip => PspPolskaConfig["ip"])
+    assert capture.valid?
   end
 
   def test_valid_response_should_create_invalid_return_without_ip
@@ -33,6 +35,8 @@ class PspPolskaReturnTest < ActiveSupport::TestCase
     assert !recurring_status.valid?
     preauth = Return.new(VALID_PREAUTH_RESPONSE)
     assert !preauth.valid?
+    capture = Return.new(VALID_CAPTURE_RESPONSE)
+    assert !capture.valid?
   end
   
   def test_valid_response_should_create_invalid_return_with_incorrect_ip
@@ -46,6 +50,8 @@ class PspPolskaReturnTest < ActiveSupport::TestCase
     assert !recurring_status.valid?
     preauth = Return.new(VALID_PREAUTH_RESPONSE, :ip => "127.0.0.1")
     assert !preauth.valid?
+    capture = Return.new(VALID_CAPTURE_RESPONSE, :ip => "127.0.0.1")
+    assert !capture.valid?
   end
 
   def test_calculate_checksum
@@ -59,6 +65,8 @@ class PspPolskaReturnTest < ActiveSupport::TestCase
     assert_equal recurring_status.calculate_checksum, Digest::MD5.hexdigest("9999999911234active5678TestResponse1")
     preauth = Return.new(VALID_PREAUTH_RESPONSE)
     assert_equal preauth.calculate_checksum, Digest::MD5.hexdigest("999999991some_session_idaccepted1307964315TestResponse1")
+    capture = Return.new(VALID_CAPTURE_RESPONSE)
+    assert_equal capture.calculate_checksum, Digest::MD5.hexdigest("999999991286708751approved1308045951TestResponse1")
   end
 
   def test_success?
@@ -97,6 +105,14 @@ class PspPolskaReturnTest < ActiveSupport::TestCase
     preauth.stubs(:valid?).returns(true)
     assert preauth.valid?
     assert !preauth.success?
+    capture = Return.new(VALID_CAPTURE_RESPONSE, :ip => PspPolskaConfig["ip"])
+    assert capture.success?
+    capture = Return.new(
+      VALID_CAPTURE_RESPONSE.gsub("<status>approved</status>", "<status>declined</status>"),
+      :ip => PspPolskaConfig["ip"])
+    capture.stubs(:valid?).returns(true)
+    assert capture.valid?
+    assert !capture.success?
   end
 
   def test_redirect_url
@@ -110,6 +126,8 @@ class PspPolskaReturnTest < ActiveSupport::TestCase
     assert_equal recurring_status.redirect_url, nil
     preauth = Return.new(VALID_PREAUTH_RESPONSE)
     assert_equal preauth.redirect_url, "https://sandbox.psp-polska.pl/transaction/credit_card/preauth/307663319"
+    capture = Return.new(VALID_CAPTURE_RESPONSE)
+    assert_equal capture.redirect_url, nil
   end
 
   def test_recurring_info
