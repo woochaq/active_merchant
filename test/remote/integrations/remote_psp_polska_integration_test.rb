@@ -27,6 +27,7 @@ class RemotePspPolskaIntegrationTest < ActiveSupport::TestCase
     assert_equal @return.action, "recurring_start"
     assert_equal @return.status, "new"
     assert_equal @return.redirect_url, "https://sandbox.psp-polska.pl/en/transaction/credit_card/recurring/#{@return.transaction_id}"
+    assert @return.success?
   end
 
   def test_recurring_status

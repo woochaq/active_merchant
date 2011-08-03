@@ -13,10 +13,12 @@ module ActiveMerchant
 
           def success?
             return false unless valid? 
-            if ["sale", "preauth", "recurring_start"].include?(action)
+            if ["sale", "preauth"].include?(action)
               return true if status == "accepted"
             elsif ["get_status", "capture"].include?(action)
               return true if status == "approved"
+            elsif action == "recurring_start"
+              return true if status == "new"
             elsif action == "recurring_status"
               raise StandardError, "success? method is not available for recurring_status. Pleasy use status method"
             else

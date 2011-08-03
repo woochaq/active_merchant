@@ -60,7 +60,7 @@ class PspPolskaReturnTest < ActiveSupport::TestCase
     get_status = Return.new(VALID_GET_STATUS_RESPONSE)
     assert_equal get_status.calculate_checksum, Digest::MD5.hexdigest("999999991725411585approved1304589448TestResponse1")
     recurring_start = Return.new(VALID_RECURRING_START_RESPONSE)
-    assert_equal recurring_start.calculate_checksum, Digest::MD5.hexdigest("999999991some_session_idaccepted1305781394TestResponse1")
+    assert_equal recurring_start.calculate_checksum, Digest::MD5.hexdigest("999999991some_session_idnew1305781394TestResponse1")
     recurring_status = Return.new(VALID_RECURRING_STATUS_RESPONSE)
     assert_equal recurring_status.calculate_checksum, Digest::MD5.hexdigest("9999999911234active5678TestResponse1")
     preauth = Return.new(VALID_PREAUTH_RESPONSE)
@@ -89,7 +89,7 @@ class PspPolskaReturnTest < ActiveSupport::TestCase
     recurring_start = Return.new(VALID_RECURRING_START_RESPONSE, :ip => PspPolskaConfig["ip"])
     assert recurring_start.success?
     recurring_start = Return.new(
-      VALID_RECURRING_START_RESPONSE.gsub("<status>accepted</status>", "<status>declined</status>"),
+      VALID_RECURRING_START_RESPONSE.gsub("<status>new</status>", "<status>declined</status>"),
       :ip => PspPolskaConfig["ip"]
     )
     recurring_start.stubs(:valid?).returns(true)

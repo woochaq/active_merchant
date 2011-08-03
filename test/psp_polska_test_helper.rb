@@ -56,9 +56,9 @@ class ActiveSupport::TestCase
     <title>bzdet</title>
     <amount>100</amount>
     <ts>1305781394</ts>
-    <checksum>81d0534c3a1851b8765a372bc88bcff9</checksum>
+    <checksum>61487d2b77d3a3d5a3f116d30561705f</checksum>
     <recurring-id>716629090</recurring-id>
-    <status>accepted</status>
+    <status>new</status>
     <redirect-url>https://sandbox.psp-polska.pl/transaction/credit_card/recurring/764714872</redirect-url>
   </response>"
 
