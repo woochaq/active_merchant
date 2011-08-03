@@ -9,7 +9,7 @@ class RemotePspPolskaIntegrationTest < ActiveSupport::TestCase
     assert @return.valid?
     assert_equal @return.action, "sale"
     assert_equal @return.status, "accepted"
-    assert_equal @return.redirect_url, "https://sandbox.psp-polska.pl/transaction/credit_card/sale/#{@return.transaction_id}"
+    assert_equal @return.redirect_url, "https://sandbox.psp-polska.pl/en/transaction/credit_card/sale/#{@return.transaction_id}"
   end
 
   def test_get_status
@@ -26,7 +26,7 @@ class RemotePspPolskaIntegrationTest < ActiveSupport::TestCase
     assert @return.valid?
     assert_equal @return.action, "recurring_start"
     assert_equal @return.status, "new"
-    assert_equal @return.redirect_url, "https://sandbox.psp-polska.pl/transaction/credit_card/recurring/#{@return.transaction_id}"
+    assert_equal @return.redirect_url, "https://sandbox.psp-polska.pl/en/transaction/credit_card/recurring/#{@return.transaction_id}"
   end
 
   def test_recurring_status
@@ -43,7 +43,7 @@ class RemotePspPolskaIntegrationTest < ActiveSupport::TestCase
     assert @return.valid?
     assert_equal @return.action, "preauth"
     assert_equal @return.status, "accepted"
-    assert_equal @return.redirect_url, "https://sandbox.psp-polska.pl/transaction/credit_card/preauth/#{@return.transaction_id}"
+    assert_equal @return.redirect_url, "https://sandbox.psp-polska.pl/en/transaction/credit_card/preauth/#{@return.transaction_id}"
   end
 
   private
