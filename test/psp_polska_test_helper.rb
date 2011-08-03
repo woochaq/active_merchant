@@ -122,6 +122,8 @@ class ActiveSupport::TestCase
     <ts>1303297377</ts>
   </response>"
 
+  VALID_CAPTURE = VALID_CAPTURE_RESPONSE
+
   VALID_RECURRING_START = "<?xml version='1.0' encoding='UTF-8'?>
   <response>
     <action>recurring_start</action>

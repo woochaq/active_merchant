@@ -19,7 +19,7 @@ module ActiveMerchant #:nodoc:
 
           def complete?
             return false unless valid?
-            return true if (["sale", "preauth"].include?(action) and status == "approved") or
+            return true if (["sale", "preauth", "capture"].include?(action) and status == "approved") or
               (action == "recurring_start" and status == "active") or
               (action == "recurring_stop" and status == "deactivated")
             false
