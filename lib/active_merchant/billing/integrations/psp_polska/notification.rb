@@ -29,6 +29,10 @@ module ActiveMerchant #:nodoc:
             params['transaction_id'] || params['recurring_id']
           end
 
+          def recurring_id
+            params['recurring_id']
+          end
+
           # When was this payment received by the client. 
           def received_at
             params['ts']
