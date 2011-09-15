@@ -7,14 +7,12 @@ module ActiveMerchant #:nodoc:
       module PspPolska
         class Notification < ActiveMerchant::Billing::Integrations::Notification
 
-          self.production_ips = [ PspPolskaConfig['ip'] ]
-
           def calculate_checksum
             Digest::MD5::hexdigest(params["app_id"] + transaction_id + params["status"] + params["ts"] + PspPolskaConfig['key_response'])
           end
 
           def valid?
-            params and valid_sender?(@options[:ip]) and valid_app_id? and valid_checksum?
+            params and valid_app_id? and valid_checksum?
           end
 
           def complete?
@@ -29,13 +27,17 @@ module ActiveMerchant #:nodoc:
             params['transaction_id'] || params['recurring_id']
           end
 
+          def session_id
+            params['session_id']
+          end
+
           def recurring_id
             params['recurring_id']
           end
 
           # When was this payment received by the client. 
           def received_at
-            params['ts']
+            Time.at(params['ts'].to_i)
           end
 
           # the money amount we received in X.2 decimal.
