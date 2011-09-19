@@ -102,7 +102,7 @@ module ActiveMerchant #:nodoc:
 
           def acknowledge_request_options
             case action
-            when "sale"
+            when "sale", "preauth"
               {:action => "get_status", :transaction_id => transaction_id}
             when "recurring_start", "recurring_stop"
               {:action => "recurring_status", :recurring_id => transaction_id}
