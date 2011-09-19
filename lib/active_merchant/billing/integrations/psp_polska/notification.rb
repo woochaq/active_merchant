@@ -89,7 +89,7 @@ module ActiveMerchant #:nodoc:
 
           # Take the posted xml data and move the relevant data into a hash
           def parse(post)
-            @params = Hash.from_xml(post)["response"]  
+            @params = Hash.from_xml(post)["response"].inject({}) {|h, (k, v)| h.merge(k => v.to_s)}  
           end
 
           def valid_checksum?
