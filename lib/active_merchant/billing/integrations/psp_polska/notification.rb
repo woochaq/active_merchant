@@ -83,7 +83,13 @@ module ActiveMerchant #:nodoc:
             request = PspPolskaRequest.new(acknowledge_request_options)
             res = request.send
             ret = Return.new(res.body, :ip => IPSocket::getaddress(PspPolskaConfig['domain']))
-            ret.success?
+            if ['capture', 'sale'].include?(self.action)
+              ret.success?
+            elsif ['recurring_start', 'recurring_stop'].include?(self.action)
+              self.status == ret.status
+            else
+              raise StandardError, "Not supported action #{self.action}"
+            end
           end
  private
 
