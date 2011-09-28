@@ -22,6 +22,8 @@ class PspPolskaReturnTest < ActiveSupport::TestCase
     assert preauth.valid?
     capture = Return.new(VALID_CAPTURE_RESPONSE, :ip => PspPolskaConfig["ip"])
     assert capture.valid?
+    recurring_stop = Return.new(VALID_RECURRING_STOP_RESPONSE, :ip => PspPolskaConfig["ip"])
+    assert recurring_stop.valid?
   end
 
   def test_valid_response_should_create_invalid_return_without_ip
@@ -37,6 +39,8 @@ class PspPolskaReturnTest < ActiveSupport::TestCase
     assert !preauth.valid?
     capture = Return.new(VALID_CAPTURE_RESPONSE)
     assert !capture.valid?
+    recurring_stop = Return.new(VALID_RECURRING_STOP_RESPONSE)
+    assert !recurring_stop.valid?
   end
   
   def test_valid_response_should_create_invalid_return_with_incorrect_ip
@@ -52,6 +56,8 @@ class PspPolskaReturnTest < ActiveSupport::TestCase
     assert !preauth.valid?
     capture = Return.new(VALID_CAPTURE_RESPONSE, :ip => "127.0.0.1")
     assert !capture.valid?
+    recurring_stop = Return.new(VALID_RECURRING_STOP_RESPONSE, :ip => "127.0.0.1")
+    assert !recurring_stop.valid?
   end
 
   def test_calculate_checksum
@@ -67,6 +73,8 @@ class PspPolskaReturnTest < ActiveSupport::TestCase
     assert_equal preauth.calculate_checksum, Digest::MD5.hexdigest("999999991some_session_idaccepted1307964315TestResponse1")
     capture = Return.new(VALID_CAPTURE_RESPONSE)
     assert_equal capture.calculate_checksum, Digest::MD5.hexdigest("999999991286708751approved1308045951TestResponse1")
+    recurring_stop = Return.new(VALID_RECURRING_STOP_RESPONSE)
+    assert_equal recurring_stop.calculate_checksum, Digest::MD5.hexdigest("999999991123456deactivated1306314732TestResponse1")
   end
 
   def test_success?
@@ -76,15 +84,13 @@ class PspPolskaReturnTest < ActiveSupport::TestCase
       VALID_SALE_RESPONSE.gsub("<status>accepted</status>", "<status>declined</status>"),
       :ip => PspPolskaConfig["ip"])
     sale.stubs(:valid?).returns(true)
-    assert sale.valid?
     assert !sale.success?
     get_status = Return.new(VALID_GET_STATUS_RESPONSE, :ip => PspPolskaConfig["ip"])
     assert get_status.success?
     get_status = Return.new(
       VALID_GET_STATUS_RESPONSE.gsub("<status>approved</status>", "<status>accepted</status>"),
       :ip => PspPolskaConfig["ip"])
-    get_status.stubs(:valid?).returns(true)
-    assert get_status.valid?
+    get_status.stubs(:valid?).returns(true)   
     assert !get_status.success?
     recurring_start = Return.new(VALID_RECURRING_START_RESPONSE, :ip => PspPolskaConfig["ip"])
     assert recurring_start.success?
@@ -93,7 +99,6 @@ class PspPolskaReturnTest < ActiveSupport::TestCase
       :ip => PspPolskaConfig["ip"]
     )
     recurring_start.stubs(:valid?).returns(true)
-    assert recurring_start.valid?
     assert !recurring_start.success?
     recurring_status = Return.new(VALID_RECURRING_STATUS_RESPONSE, :ip => PspPolskaConfig["ip"])
     assert_raise(StandardError) { recurring_status.success? }
@@ -103,7 +108,6 @@ class PspPolskaReturnTest < ActiveSupport::TestCase
       VALID_PREAUTH_RESPONSE.gsub("<status>accepted</status>", "<status>declined</status>"),
       :ip => PspPolskaConfig["ip"])
     preauth.stubs(:valid?).returns(true)
-    assert preauth.valid?
     assert !preauth.success?
     capture = Return.new(VALID_CAPTURE_RESPONSE, :ip => PspPolskaConfig["ip"])
     assert capture.success?
@@ -111,8 +115,15 @@ class PspPolskaReturnTest < ActiveSupport::TestCase
       VALID_CAPTURE_RESPONSE.gsub("<status>approved</status>", "<status>declined</status>"),
       :ip => PspPolskaConfig["ip"])
     capture.stubs(:valid?).returns(true)
-    assert capture.valid?
     assert !capture.success?
+    recurring_stop = Return.new(VALID_RECURRING_STOP_RESPONSE, :ip => PspPolskaConfig["ip"])
+    assert recurring_stop.success?
+    recurring_stop = Return.new(
+      VALID_RECURRING_STOP_RESPONSE.gsub("<status>deactivated</status>", "<status>active</status>"),
+      :ip => PspPolskaConfig["ip"]
+    )
+    recurring_stop.stubs(:valid? => true)
+    assert recurring_stop.success?
   end
 
   def test_redirect_url

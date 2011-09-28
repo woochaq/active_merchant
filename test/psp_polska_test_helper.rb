@@ -83,6 +83,20 @@ class ActiveSupport::TestCase
     </last-successful-transaction>
   </response>"
 
+  VALID_RECURRING_STOP_RESPONSE = "<?xml version='1.0' encoding='UTF-8'?>
+  <response>
+  	  <action>recurring_stop</action>
+  	  <app-id>999999991</app-id>
+  	  <recurring-id>123456</recurring-id>
+  	  <ts>1306314732</ts>
+  	  <checksum>3d1829d96b9dd8a53baf20bf55996b4e</checksum>
+  	  <status>deactivated</status>
+  	  <amount>1000.0</amount>
+  	  <currency>PLN</currency>
+  	  <title>Recurring 706631045</title>
+  	  <session-id>ses45011</session-id>
+  </response> "
+
   VALID_CAPTURE_RESPONSE = "<?xml version='1.0' encoding='UTF-8'?>
   <response>
     <action>capture</action>

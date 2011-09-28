@@ -21,6 +21,8 @@ module ActiveMerchant
               return true if status == "new"
             elsif action == "recurring_status"
               raise StandardError, "success? method is not available for recurring_status. Pleasy use status method"
+            elsif action == "recurring_stop"
+              return true if status = "deactivated"
             else
               action_not_implemented_error
             end
@@ -60,7 +62,7 @@ module ActiveMerchant
               Digest::MD5::hexdigest(params["app_id"] + params["session_id"] + params["status"] + params["ts"] + PspPolskaConfig['key_response'])
             elsif ["get_status", "capture"].include?(action)
               Digest::MD5::hexdigest(params["app_id"] + params["transaction_id"] + params["status"] + params["ts"] + PspPolskaConfig['key_response'])
-            elsif action == "recurring_status"
+            elsif ["recurring_status", "recurring_stop"].include?(action)
               Digest::MD5::hexdigest(params["app_id"] + params["recurring_id"] + params["status"] + params["ts"] + PspPolskaConfig['key_response'])
             else
               action_not_implemented_error
