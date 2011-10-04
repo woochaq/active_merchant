@@ -5,7 +5,7 @@ class PspPolskaReturnTest < ActiveSupport::TestCase
   include ActiveMerchant::Billing::Integrations::PspPolska
 
   def test_empty_response_should_not_create_valid_return
-    r = Return.new("<request></request>")
+    r = Return.new("<response><node></node></response>")
     assert !r.valid?
   end
 
@@ -143,7 +143,7 @@ class PspPolskaReturnTest < ActiveSupport::TestCase
 
   def test_recurring_info
     recurring_status = Return.new(VALID_RECURRING_STATUS_RESPONSE)
-    assert_equal recurring_status.payments_count, 1
+    assert_equal recurring_status.payments_count, "1"
     assert_equal recurring_status.last_successful_transaction, {"transaction_id"=>"778924173", "date"=>"2011-05-19", "status"=>"approved"}
   end
 end

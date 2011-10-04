@@ -22,7 +22,7 @@ module ActiveMerchant
             elsif action == "recurring_status"
               raise StandardError, "success? method is not available for recurring_status. Pleasy use status method"
             elsif action == "recurring_stop"
-              return true if status = "deactivated"
+              return true if status == "deactivated"
             else
               action_not_implemented_error
             end
@@ -72,7 +72,7 @@ module ActiveMerchant
           private
 
           def parse(query_string)
-            Hash.from_xml(query_string)["response"]
+            Hash.from_xml(query_string)["response"].inject({}) {|h, (k, v)| h.merge(k => v.is_a?(Hash) ? v : v.to_s)}
           end
 
           def valid_app_id?
