@@ -123,7 +123,7 @@ class PspPolskaReturnTest < ActiveSupport::TestCase
       :ip => PspPolskaConfig["ip"]
     )
     recurring_stop.stubs(:valid? => true)
-    assert recurring_stop.success?
+    assert !recurring_stop.success?
   end
 
   def test_redirect_url
