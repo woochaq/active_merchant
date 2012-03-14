@@ -1,6 +1,8 @@
 require 'test_helper'
 require 'psp_polska_test_helper'
 
+PspPolskaConfig = YAML.load_file(File.join(File.dirname(__FILE__), "../../psp_polska_remote.yml"))
+
 class RemotePspPolskaIntegrationTest < ActiveSupport::TestCase
   include ActiveMerchant::Billing::Integrations::PspPolska
 
