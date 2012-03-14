@@ -2,6 +2,45 @@ PspPolskaConfig = YAML.load_file(File.join(File.dirname(__FILE__), "psp_polska.y
 
 class ActiveSupport::TestCase
 
+
+  def psp_polska_test_data
+    output_hash = {
+      :sale => {
+        :session_id => sale_session_id = SecureRandom.hex(10),
+        :request => {
+          :action => 'sale',
+          :amount => 100,
+          :currency => 'EUR',
+          :title => "Title #{sale_session_id}",
+          :session_id => sale_session_id,
+          :email => 'email@example.com',
+          :first_name => 'John',
+          :last_name => 'Smith',
+          :client_ip => '127.0.0.1'
+        }
+      }
+    }
+    output_hash.merge!(
+      :recurring_start => {
+        :session_id => recurring_session_id = SecureRandom.hex(10),
+        :request => output_hash[:sale][:request].merge(
+          :action => 'recurring_start',
+          :cycle => '1m',
+          :max_amount => 100,
+          :session_id => recurring_session_id
+        )
+      },
+      :preauth => {
+        :session_id => preauth_session_id = SecureRandom.hex(10),
+        :request=> output_hash[:sale][:request].merge(
+          :action => 'preauth',
+          :session_id => preauth_session_id
+        )
+      }
+    )
+  end
+
+
   VALID_SALE_RESPONSE = "<?xml version='1.0' encoding='UTF-8'?>
   <response>
     <action>sale</action>
@@ -95,7 +134,7 @@ class ActiveSupport::TestCase
   	  <currency>PLN</currency>
   	  <title>Recurring 706631045</title>
   	  <session-id>ses45011</session-id>
-  </response> "
+  </response>"
 
   VALID_CAPTURE_RESPONSE = "<?xml version='1.0' encoding='UTF-8'?>
   <response>
@@ -170,7 +209,7 @@ class ActiveSupport::TestCase
 
   VALID_STATUS_REQUEST_PARAMS = {:action => "get_status", :transaction_id => "666"}
 
-  VALID_RECURRING_START_REQUEST_PARAMS = VALID_SALE_REQUEST_PARAMS.merge(:action => "recurring_start", :cycle => "1m")
+  VALID_RECURRING_START_REQUEST_PARAMS = VALID_SALE_REQUEST_PARAMS.merge(:action => "recurring_start", :cycle => "1m", :max_amount => 100)
 
   VALID_RECURRING_STOP_REQUEST_PARAMS = {:action => "recurring_stop", :recurring_id => 777}
 
