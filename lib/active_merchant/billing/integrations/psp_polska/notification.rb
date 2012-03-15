@@ -8,7 +8,15 @@ module ActiveMerchant #:nodoc:
         class Notification < ActiveMerchant::Billing::Integrations::Notification
 
           def calculate_checksum
-            Digest::MD5::hexdigest(params["app_id"] + transaction_id + params["status"] + params["ts"] + PspPolskaConfig['key_response'])
+            Digest::MD5::hexdigest(params["app_id"] + checksum_field + params["status"] + params["ts"] + PspPolskaConfig['key_response'])
+          end
+
+          def checksum_field
+            if ['recurring_start', 'recurring_stop', 'recurring_status'].include?(action)
+              recurring_id
+            else
+              transaction_id
+            end
           end
 
           def valid?
